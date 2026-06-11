@@ -1,0 +1,37 @@
+.page { padding: 32px; max-width: 600px; }
+
+.header { margin-bottom: 28px; }
+.title { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+.sub { color: #6B7280; font-size: 14px; }
+
+.scannerWrap {
+  background: #fff;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+
+.resultWrap { display: flex; flex-direction: column; gap: 16px; }
+
+.loadingText, .errorText {
+  text-align: center;
+  margin-top: 12px;
+  font-size: 14px;
+}
+.loadingText { color: #6B7280; }
+.errorText { color: #EF4444; background: #FEF2F2; border-radius: 8px; padding: 10px; }
+
+.resetBtn {
+  background: transparent;
+  border: 1.5px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6B7280;
+  max-width: 420px;
+  width: 100%;
+  margin: 0 auto;
+  transition: all 0.15s;
+}
+.resetBtn:hover { border-color: #5B7E3C; color: #5B7E3C; }

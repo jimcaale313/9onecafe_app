@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String       @id @default(uuid())
+  name           String
+  phone          String       @unique
+  qrCode         String       @unique @map("qr_code")
+  totalStamps    Int          @default(0) @map("total_stamps")
+  currentStamps  Int          @default(0) @map("current_stamps")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  stampEvents    StampEvent[]
+  feedback       Feedback[]
+
+  @@map("users")
+}
+
+model Staff {
+  id           String       @id @default(uuid())
+  name         String
+  username     String       @unique
+  passwordHash String       @map("password_hash")
+  role         StaffRole    @default(staff)
+  isActive     Boolean      @default(true) @map("is_active")
+  createdAt    DateTime     @default(now()) @map("created_at")
+  stampEvents  StampEvent[]
+
+  @@map("staff")
+}
+
+model StampEvent {
+  id           String          @id @default(uuid())
+  userId       String          @map("user_id")
+  staffId      String          @map("staff_id")
+  eventType    StampEventType  @map("event_type")
+  stampsBefore Int             @map("stamps_before")
+  stampsAfter  Int             @map("stamps_after")
+  createdAt    DateTime        @default(now()) @map("created_at")
+  user         User            @relation(fields: [userId], references: [id])
+  staff        Staff           @relation(fields: [staffId], references: [id])
+
+  @@map("stamp_events")
+}
+
+model MenuItem {
+  id              String   @id @default(uuid())
+  name            String
+  category        String
+  productCategory String   @map("product_category")
+  price           Decimal  @db.Decimal(10, 2)
+  isAvailable     Boolean  @default(true) @map("is_available")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  @@map("menu_items")
+}
+
+model Feedback {
+  id               String   @id @default(uuid())
+  userId           String?  @map("user_id")
+  customerName     String   @map("customer_name")
+  visitDate        DateTime @map("visit_date") @db.Date
+  menuItemsOrdered String[] @map("menu_items_ordered")
+  rating           Int
+  feedbackText     String   @map("feedback_text") @db.Text
+  createdAt        DateTime @default(now()) @map("created_at")
+  user             User?    @relation(fields: [userId], references: [id])
+
+  @@map("feedback")
+}
+
+enum StaffRole {
+  admin
+  staff
+}
+
+enum StampEventType {
+  stamp_added
+  redeemed
+}
