@@ -12,6 +12,7 @@ model User {
   id             String       @id @default(uuid())
   name           String
   phone          String       @unique
+  passwordHash   String?      @map("password_hash")
   qrCode         String       @unique @map("qr_code")
   totalStamps    Int          @default(0) @map("total_stamps")
   currentStamps  Int          @default(0) @map("current_stamps")

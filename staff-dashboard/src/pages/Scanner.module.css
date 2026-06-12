@@ -10,6 +10,15 @@
   padding: 24px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.06);
 }
+.scannerWrap :global(#qr-reader) {
+  width: 100% !important;
+  border: none !important;
+}
+.scannerWrap :global(#qr-reader video) {
+  border-radius: 12px;
+  width: 100% !important;
+  height: auto !important;
+}
 
 .resultWrap { display: flex; flex-direction: column; gap: 16px; }
 

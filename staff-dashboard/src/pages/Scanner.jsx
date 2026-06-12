@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Html5QrcodeScanner } from 'html5-qrcode';
+import { Html5Qrcode } from 'html5-qrcode';
 import CustomerCard from '../components/CustomerCard';
 import api from '../services/api';
 import styles from './Scanner.module.css';
@@ -9,31 +9,73 @@ export default function Scanner() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [scanning, setScanning] = useState(true);
-  const scannerRef = useRef(null);
-  const scannerInstanceRef = useRef(null);
+  const qrRef = useRef(null);
 
   useEffect(() => {
     if (!scanning) return;
-    const scanner = new Html5QrcodeScanner('qr-reader', { fps: 10, qrbox: 250 }, false);
-    scannerInstanceRef.current = scanner;
-    scanner.render(
-      async qrCode => {
-        scanner.clear().catch(() => {});
-        setScanning(false);
-        setError('');
-        setLoading(true);
+
+    let active = true;
+    const qr = new Html5Qrcode('qr-reader');
+    qrRef.current = qr;
+
+    async function start() {
+      const config = { fps: 10, qrbox: { width: 280, height: 280 } };
+      try {
+        await qr.start(
+          { facingMode: { exact: 'environment' } },
+          config,
+          handleScan,
+          () => {}
+        );
+      } catch {
         try {
-          const { data } = await api.post('/stamps/scan', { qrCode });
-          setCustomer(data.data);
-        } catch (err) {
-          setError(err.response?.data?.error || 'Customer not found');
-        } finally {
-          setLoading(false);
+          await qr.start(
+            { facingMode: 'environment' },
+            config,
+            handleScan,
+            () => {}
+          );
+        } catch {
+          try {
+            const cameras = await Html5Qrcode.getCameras();
+            const back =
+              cameras.find(c => /back|rear|environment/i.test(c.label)) ||
+              cameras[cameras.length - 1];
+            if (back) {
+              await qr.start(back.id, config, handleScan, () => {});
+            } else {
+              setError('No camera available');
+            }
+          } catch {
+            setError('Camera access denied. Please allow camera permissions.');
+          }
         }
-      },
-      () => {}
-    );
-    return () => { scanner.clear().catch(() => {}); };
+      }
+    }
+
+    async function handleScan(qrCode) {
+      if (!active) return;
+      active = false;
+      try { await qr.stop(); } catch {}
+      setScanning(false);
+      setError('');
+      setLoading(true);
+      try {
+        const { data } = await api.post('/stamps/scan', { qrCode });
+        setCustomer(data.data);
+      } catch (err) {
+        setError(err.response?.data?.error || 'Customer not found');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    start();
+
+    return () => {
+      active = false;
+      qr.stop().catch(() => {}).then(() => qr.clear().catch(() => {}));
+    };
   }, [scanning]);
 
   async function addStamp() {
@@ -76,7 +118,7 @@ export default function Scanner() {
 
       {scanning && (
         <div className={styles.scannerWrap}>
-          <div id="qr-reader" ref={scannerRef} />
+          <div id="qr-reader" />
           {loading && <p className={styles.loadingText}>Looking up customer...</p>}
           {error && <p className={styles.errorText}>{error}</p>}
         </div>

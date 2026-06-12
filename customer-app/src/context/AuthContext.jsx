@@ -13,18 +13,22 @@ export function AuthProvider({ children }) {
     setLoading(false);
   }, []);
 
-  async function register(name, phone) {
-    const { data } = await api.post('/auth/register', { name, phone });
+  async function register(name, phone, password) {
+    const { data } = await api.post('/auth/register', { name, phone, password });
     localStorage.setItem('customerToken', data.data.accessToken);
     localStorage.setItem('customerUser', JSON.stringify(data.data.user));
     setUser(data.data.user);
   }
 
-  async function login(phone) {
-    const { data } = await api.post('/auth/login', { phone });
+  async function login(phone, password) {
+    const { data } = await api.post('/auth/login', { phone, password });
     localStorage.setItem('customerToken', data.data.accessToken);
     localStorage.setItem('customerUser', JSON.stringify(data.data.user));
     setUser(data.data.user);
+  }
+
+  async function forgotPassword(phone, newPassword) {
+    await api.post('/auth/forgot-password', { phone, newPassword });
   }
 
   function logout() {
@@ -42,7 +46,7 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, loading, refreshUser }}>
+    <AuthContext.Provider value={{ user, login, register, logout, loading, refreshUser, forgotPassword }}>
       {children}
     </AuthContext.Provider>
   );
