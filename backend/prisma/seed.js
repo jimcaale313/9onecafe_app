@@ -4,6 +4,98 @@ const { v4: uuidv4 } = require('uuid');
 
 const prisma = new PrismaClient();
 
+const U = id => `https://images.unsplash.com/photo-${id}?w=600&q=80&auto=format&fit=crop`;
+
+// Order matters — first match wins. Specific names → keywords → category fallback.
+const IMAGE_RULES = [
+  // Specific drinks
+  [/affogato/i,                       U('1577805947697-89e18249d767')],
+  [/espresso macchiato|macchiato/i,   U('1485808191679-5f86510681a2')],
+  [/iced (caramel )?mocha|iced white mocha/i, U('1517701604599-bb29b565090c')],
+  [/iced (caramel|vanilla|spanish|coconut|chai|classic )?latte|iced coffee/i, U('1517959105821-eaf2591984ca')],
+  [/iced americano/i,                 U('1497935586351-b67a49e012bf')],
+  [/iced (.*)?(matcha)/i,             U('1571805129764-d49d22acd5a5')],
+  [/(white )?mocha/i,                 U('1578374173705-969cbe6f2d6b')],
+  [/cappuccino/i,                     U('1572286258217-215cf8e9d3a4')],
+  [/flat white/i,                     U('1494314671902-399b18174975')],
+  [/cortado/i,                        U('1559056199-641a0ac8b55e')],
+  [/americano/i,                      U('1497935586351-b67a49e012bf')],
+  [/(caramel|vanilla|spanish|coconut|salted|wild|camel) latte|latte/i, U('1561882468-9110e03e0f78')],
+  [/chai tea latte|chai/i,            U('1592318011281-2b4ade4b69d1')],
+  [/doppio|lungo|red eye|v60/i,       U('1510591509098-f4fdc6d0ff04')],
+  [/espresso/i,                       U('1510707577719-ae7c14805e3a')],
+  [/matcha/i,                         U('1571805129764-d49d22acd5a5')],
+  [/hot chocolate/i,                  U('1542990253-0d0f5be5f0ed')],
+  [/karak|masala|spanish tea|sinimon|cinnamon/i, U('1592318011281-2b4ade4b69d1')],
+  [/hibiscus|fruit tea/i,             U('1565020477847-30d0fb4ef8d2')],
+  [/ginger tea/i,                     U('1594631252845-29fc4cc8cde9')],
+  [/lemon tea/i,                      U('1556679343-c7306c1976bc')],
+  [/green tea/i,                      U('1556679343-c7306c1976bc')],
+  [/black tea|lipton|somali|red tea|xanshar|9 one special tea|fresh 91/i, U('1576092768241-dec231879fc3')],
+  // Cold drinks
+  [/frappe/i,                         U('1572490122747-3968b75cc699')],
+  [/smoothie/i,                       U('1525385133512-2f3bdd039054')],
+  [/mojito/i,                         U('1551538827-9c037cb4f32a')],
+  [/milkshake/i,                      U('1572490122747-3968b75cc699')],
+  [/(fresh )?juice|orange|apple|carrot|pineapple/i, U('1600271886742-f049cd451bba')],
+  [/refresher/i,                      U('1546173159-315724a31696')],
+  [/mango/i,                          U('1605027990121-cbae9e0642db')],
+  [/strawberry/i,                     U('1587735243615-c03f25aaff15')],
+  [/watermelon/i,                     U('1571575173700-afb9492e6a50')],
+  [/peach/i,                          U('1587735243615-c03f25aaff15')],
+  [/iced tea/i,                       U('1556679343-c7306c1976bc')],
+  // Food
+  [/burger/i,                         U('1568901346375-23c9450c58cd')],
+  [/pizza/i,                          U('1565299624946-b28f40a0ae38')],
+  [/pasta|spaghetti|fettuccine|penne|lasagna/i, U('1551183053-bf91a1d81141')],
+  [/salad/i,                          U('1512621776951-a57141f2eefd')],
+  [/club sandwich|sandwich/i,         U('1528735602780-2552fd46c7af')],
+  [/soup/i,                           U('1547592180-85f173990554')],
+  [/omelette|omelet|scrambled|eggs/i, U('1612240498936-65f5101365d2')],
+  [/pancake/i,                        U('1528207776546-365bb710ee93')],
+  [/waffle/i,                         U('1572569511254-d8f925fe2cbb')],
+  [/croissant/i,                      U('1555507036-ab1f4038808a')],
+  [/cheesecake|cheese cake|red velvet|basbusa|dessert|cake/i, U('1551024506-0bccd828d307')],
+  [/chicken/i,                        U('1604908176997-125f25cc6f3d')],
+  [/fries|chips/i,                    U('1573080496219-bb080dd4f877')],
+  [/wrap|shawarma/i,                  U('1565299585323-38d6b0865b47')],
+  [/rice|biryani/i,                   U('1603133872878-684f208fb84b')],
+  [/breakfast|toast|bagel|porridge/i, U('1525351484163-7529414344d8')],
+  // Category fallbacks
+  [/(coffee|caffe|cafe)/i,            U('1510707577719-ae7c14805e3a')],
+  [/tea/i,                            U('1576092768241-dec231879fc3')],
+];
+
+const CATEGORY_FALLBACK = {
+  Coffee:       U('1510707577719-ae7c14805e3a'),
+  'Hot Tea':    U('1576092768241-dec231879fc3'),
+  Matcha:       U('1571805129764-d49d22acd5a5'),
+  Signature:    U('1546173159-315724a31696'),
+  Frappes:      U('1572490122747-3968b75cc699'),
+  Mojitos:      U('1551538827-9c037cb4f32a'),
+  Smoothies:    U('1525385133512-2f3bdd039054'),
+  'Fresh Juice':U('1600271886742-f049cd451bba'),
+  'Iced Tea':   U('1556679343-c7306c1976bc'),
+  Milkshakes:   U('1572490122747-3968b75cc699'),
+  Breakfast:    U('1525351484163-7529414344d8'),
+  Burgers:      U('1568901346375-23c9450c58cd'),
+  Pizza:        U('1565299624946-b28f40a0ae38'),
+  Pasta:        U('1551183053-bf91a1d81141'),
+  'Main Course':U('1604908176997-125f25cc6f3d'),
+  Salads:       U('1512621776951-a57141f2eefd'),
+  Sandwiches:   U('1528735602780-2552fd46c7af'),
+  Soups:        U('1547592180-85f173990554'),
+  Sides:        U('1573080496219-bb080dd4f877'),
+  Desserts:     U('1551024506-0bccd828d307'),
+};
+
+function pickImage(name, category) {
+  for (const [pattern, url] of IMAGE_RULES) {
+    if (pattern.test(name)) return url;
+  }
+  return CATEGORY_FALLBACK[category] || null;
+}
+
 const menuItems = [
   // Hot Beverages — Coffee
   { name: 'Espresso', category: 'Coffee', productCategory: 'Hot Beverages', price: 1.50 },
@@ -317,6 +409,7 @@ async function main() {
       category: item.category,
       productCategory: item.productCategory,
       price: item.price,
+      imageUrl: pickImage(item.name, item.category),
       isAvailable: true,
     })),
   });

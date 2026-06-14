@@ -17,6 +17,7 @@ router.get('/', async (req, res, next) => {
         price: parseFloat(item.price),
         category: item.category,
         productCategory: item.productCategory,
+        imageUrl: item.imageUrl,
       });
     }
     res.json({ success: true, data: grouped });
@@ -34,7 +35,7 @@ router.get('/:category', async (req, res, next) => {
     });
     res.json({
       success: true,
-      data: items.map(i => ({ id: i.id, name: i.name, price: parseFloat(i.price), category: i.category })),
+      data: items.map(i => ({ id: i.id, name: i.name, price: parseFloat(i.price), category: i.category, imageUrl: i.imageUrl })),
     });
   } catch (err) { next(err); }
 });

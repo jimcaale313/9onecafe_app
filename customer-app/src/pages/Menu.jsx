@@ -4,6 +4,30 @@ import BottomNav from '../components/BottomNav';
 import api from '../services/api';
 import styles from './Menu.module.css';
 
+const CATEGORY_EMOJI = {
+  Coffee: '☕', 'Hot Tea': '🍵', Matcha: '🧋', Signature: '✨',
+  Frappes: '🥤', Mojitos: '🍹', Smoothies: '🌿', 'Fresh Juice': '🍓',
+  'Iced Tea': '🌺', Milkshakes: '🥛', Breakfast: '🍳', Burgers: '🍔',
+  Pizza: '🍕', Pasta: '🍝', 'Main Course': '🍛', Salads: '🥗',
+  Sandwiches: '🌯', Soups: '🍜', Sides: '🍟', Desserts: '🎂',
+};
+
+function ItemImage({ src, category }) {
+  const [failed, setFailed] = useState(false);
+  if (!src || failed) {
+    return <span className={styles.cardEmoji}>{CATEGORY_EMOJI[category] || '🍽️'}</span>;
+  }
+  return (
+    <img
+      src={src}
+      alt=""
+      className={styles.cardImage}
+      loading="lazy"
+      onError={() => setFailed(true)}
+    />
+  );
+}
+
 export default function Menu() {
   const [grouped, setGrouped] = useState({});
   const [search, setSearch] = useState('');
@@ -63,7 +87,7 @@ export default function Menu() {
                 style={{ animationDelay: `${i * 0.04}s` }}
               >
                 <div className={styles.cardImg}>
-                  <span className={styles.cardEmoji}>{getCategoryEmoji(item.category)}</span>
+                  <ItemImage src={item.imageUrl} category={item.category} />
                 </div>
                 <div className={styles.cardBody}>
                   <p className={styles.itemName}>{item.name}</p>
@@ -80,15 +104,4 @@ export default function Menu() {
       <BottomNav />
     </div>
   );
-}
-
-function getCategoryEmoji(cat) {
-  const map = {
-    Coffee: '☕', 'Hot Tea': '🍵', Matcha: '🧋', Signature: '✨',
-    Frappes: '🥤', Mojitos: '🍹', Smoothies: '🌿', 'Fresh Juice': '🍓',
-    'Iced Tea': '🌺', Milkshakes: '🥛', Breakfast: '🍳', Burgers: '🍔',
-    Pizza: '🍕', Pasta: '🍝', 'Main Course': '🍛', Salads: '🥗',
-    Sandwiches: '🌯', Soups: '🍜', Sides: '🍟', Desserts: '🎂',
-  };
-  return map[cat] || '🍽️';
 }

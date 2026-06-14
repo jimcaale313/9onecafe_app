@@ -6,9 +6,11 @@ export default function MenuManager() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-  const [form, setForm] = useState({ name: '', category: '', productCategory: '', price: '' });
+  const [form, setForm] = useState({ name: '', category: '', productCategory: '', price: '', imageUrl: '' });
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState('');
+  const [editId, setEditId] = useState(null);
+  const [editImage, setEditImage] = useState('');
 
   async function load() {
     const { data } = await api.get('/menu');
@@ -26,9 +28,11 @@ export default function MenuManager() {
     e.preventDefault();
     setSaving(true);
     try {
-      await api.post('/admin/menu', { ...form, price: parseFloat(form.price) });
+      const payload = { ...form, price: parseFloat(form.price) };
+      if (!payload.imageUrl) delete payload.imageUrl;
+      await api.post('/admin/menu', payload);
       setMsg('Item added!');
-      setForm({ name: '', category: '', productCategory: '', price: '' });
+      setForm({ name: '', category: '', productCategory: '', price: '', imageUrl: '' });
       load();
     } catch (err) {
       setMsg(err.response?.data?.error || 'Error');
@@ -41,6 +45,21 @@ export default function MenuManager() {
     if (!window.confirm('Remove this item from the menu?')) return;
     await api.delete(`/admin/menu/${id}`);
     load();
+  }
+
+  function startEdit(item) {
+    setEditId(item.id);
+    setEditImage(item.imageUrl || '');
+  }
+
+  async function saveEdit(id) {
+    try {
+      await api.patch(`/admin/menu/${id}`, { imageUrl: editImage || null });
+      setEditId(null);
+      load();
+    } catch (err) {
+      setMsg(err.response?.data?.error || 'Failed to update');
+    }
   }
 
   const filtered = items.filter(i =>
@@ -65,12 +84,32 @@ export default function MenuManager() {
           />
           <div className={styles.tableWrap}>
             <table className={styles.table}>
-              <thead><tr><th>Name</th><th>Category</th><th>Price</th><th></th></tr></thead>
+              <thead><tr><th>Image</th><th>Name</th><th>Category</th><th>Price</th><th></th></tr></thead>
               <tbody>
                 {loading
-                  ? <tr><td colSpan={4} className={styles.center}>Loading...</td></tr>
+                  ? <tr><td colSpan={5} className={styles.center}>Loading...</td></tr>
                   : filtered.map(item => (
                     <tr key={item.id}>
+                      <td>
+                        {editId === item.id ? (
+                          <div className={styles.editImageWrap}>
+                            <input
+                              className={styles.editImageInput}
+                              value={editImage}
+                              onChange={e => setEditImage(e.target.value)}
+                              placeholder="https://..."
+                            />
+                            <button className={styles.saveBtn} onClick={() => saveEdit(item.id)}>Save</button>
+                            <button className={styles.cancelBtn} onClick={() => setEditId(null)}>×</button>
+                          </div>
+                        ) : (
+                          <button className={styles.thumbBtn} onClick={() => startEdit(item)} title="Click to edit image URL">
+                            {item.imageUrl
+                              ? <img src={item.imageUrl} alt="" className={styles.thumb} />
+                              : <span className={styles.thumbPlaceholder}>+</span>}
+                          </button>
+                        )}
+                      </td>
                       <td>{item.name}</td>
                       <td><span className={styles.catBadge}>{item.category}</span></td>
                       <td className={styles.price}>${parseFloat(item.price).toFixed(2)}</td>
@@ -92,6 +131,12 @@ export default function MenuManager() {
             <Field label="Category" value={form.category} onChange={v => setForm(f => ({ ...f, category: v }))} placeholder="e.g. Coffee, Burgers" required />
             <Field label="Product Category" value={form.productCategory} onChange={v => setForm(f => ({ ...f, productCategory: v }))} placeholder="e.g. Hot Beverages, Food" required />
             <Field label="Price (USD)" type="number" step="0.01" min="0" value={form.price} onChange={v => setForm(f => ({ ...f, price: v }))} required />
+            <Field label="Image URL (optional)" type="url" value={form.imageUrl} onChange={v => setForm(f => ({ ...f, imageUrl: v }))} placeholder="https://..." />
+            {form.imageUrl && (
+              <img src={form.imageUrl} alt="preview" className={styles.preview}
+                onError={e => { e.currentTarget.style.display = 'none'; }}
+              />
+            )}
             {msg && <p className={styles.msg}>{msg}</p>}
             <button type="submit" className={styles.addBtn} disabled={saving}>
               {saving ? 'Adding...' : '+ Add Item'}

@@ -37,3 +37,42 @@
 .addBtn { background: #5B7E3C; color: #fff; border: none; border-radius: 12px; padding: 13px; font-size: 15px; font-weight: 600; transition: background 0.2s; }
 .addBtn:hover:not(:disabled) { background: #4a6a2f; }
 .addBtn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.thumbBtn {
+  width: 48px; height: 48px;
+  border-radius: 10px;
+  border: 1px solid #E5E7EB;
+  background: #F9FAFB;
+  padding: 0;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.15s;
+}
+.thumbBtn:hover { border-color: #5B7E3C; transform: scale(1.05); }
+.thumb { width: 100%; height: 100%; object-fit: cover; display: block; }
+.thumbPlaceholder { color: #9CA3AF; font-size: 22px; line-height: 48px; display: block; }
+
+.editImageWrap { display: flex; align-items: center; gap: 6px; }
+.editImageInput {
+  width: 220px;
+  border: 1.5px solid #5B7E3C;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 12px;
+  outline: none;
+}
+.saveBtn {
+  background: #5B7E3C; color: #fff; border: none;
+  border-radius: 6px; padding: 5px 10px; font-size: 12px;
+  font-weight: 600; cursor: pointer;
+}
+.cancelBtn {
+  background: #F3F4F6; color: #6B7280; border: none;
+  border-radius: 6px; width: 26px; height: 26px;
+  font-size: 16px; line-height: 1; cursor: pointer;
+}
+.preview {
+  width: 100%; height: 140px; object-fit: cover;
+  border-radius: 10px; border: 1px solid #E5E7EB;
+  margin-top: 4px;
+}

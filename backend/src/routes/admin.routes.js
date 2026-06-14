@@ -135,6 +135,7 @@ const menuItemSchema = z.object({
   category: z.string().min(1),
   productCategory: z.string().min(1),
   price: z.number().positive(),
+  imageUrl: z.string().url().optional().or(z.literal('')),
 });
 router.post('/menu', validate(menuItemSchema), async (req, res, next) => {
   try {

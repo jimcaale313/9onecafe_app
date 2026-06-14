@@ -92,6 +92,15 @@
 }
 .card:hover .cardEmoji { transform: scale(1.12) rotate(-4deg); }
 
+.cardImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s var(--ease-out);
+}
+.card:hover .cardImage { transform: scale(1.06); }
+
 .cardBody { padding: 11px 12px 13px; }
 .itemName {
   font-size: 13px;
