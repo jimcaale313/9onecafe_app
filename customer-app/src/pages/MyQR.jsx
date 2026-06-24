@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import AppHeader from '../components/AppHeader';
 import BottomNav from '../components/BottomNav';
-import StampRow from '../components/StampRow';
+import LoyaltyCard from '../components/LoyaltyCard';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import styles from './MyQR.module.css';
@@ -10,6 +10,8 @@ export default function MyQR() {
   const { user } = useAuth();
   const [qrImage, setQrImage] = useState('');
   const [stamps, setStamps] = useState(user?.currentStamps ?? 0);
+  const [totalStamps, setTotalStamps] = useState(user?.totalStamps ?? 0);
+  const [name, setName] = useState(user?.name ?? 'Guest');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -19,6 +21,8 @@ export default function MyQR() {
     ]).then(([qrRes, meRes]) => {
       setQrImage(qrRes.data.data.qrImage);
       setStamps(meRes.data.data.currentStamps);
+      setTotalStamps(meRes.data.data.totalStamps);
+      setName(meRes.data.data.name);
     }).finally(() => setLoading(false));
   }, []);
 
@@ -28,36 +32,23 @@ export default function MyQR() {
     <div className={styles.page}>
       <AppHeader />
       <div className={styles.content}>
-        <h2 className={styles.title}>My QR Code</h2>
+        <h2 className={styles.title}>My Loyalty Card</h2>
+        <p className={styles.subtitle}>Show this to staff when you buy a coffee</p>
 
-        <div className={styles.qrCard}>
-          <div className={styles.qrInner}>
-            <span className={`${styles.corner} ${styles.tl}`} />
-            <span className={`${styles.corner} ${styles.tr}`} />
-            <span className={`${styles.corner} ${styles.bl}`} />
-            <span className={`${styles.corner} ${styles.br}`} />
-            {loading ? (
-              <div className={styles.qrPlaceholder}>
-                <div className={styles.qrLoader} />
-                <span>Generating...</span>
-              </div>
-            ) : (
-              <img src={qrImage} alt="Your QR Code" className={styles.qrImg} />
-            )}
-          </div>
-          <p className={styles.qrHint}>Show this to staff when you buy a coffee</p>
-        </div>
+        <LoyaltyCard
+          name={name}
+          currentStamps={stamps}
+          totalStamps={totalStamps}
+          qrImage={qrImage}
+          loading={loading}
+        />
 
-        <div className={styles.loyaltySection}>
-          <div className={styles.loyaltyHeader}>
-            <p className={styles.loyaltyLabel}>Loyalty Card</p>
-            <p className={styles.loyaltyStat}>You have {stamps}/6 stamps</p>
-          </div>
-          <StampRow current={stamps} total={6} />
-          <button className={`${styles.redeemBtn} ${canRedeem ? styles.redeemActive : ''}`} disabled={!canRedeem}>
-            Redeem Reward
-          </button>
-        </div>
+        <button
+          className={`${styles.redeemBtn} ${canRedeem ? styles.redeemActive : ''}`}
+          disabled={!canRedeem}
+        >
+          {canRedeem ? '🎉 Redeem Free Coffee' : `${6 - stamps} more to a free coffee`}
+        </button>
 
         <div className={styles.quote}>
           <p>🌿 &ldquo;Life is too short for bad coffee.&rdquo;</p>

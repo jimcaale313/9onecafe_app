@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import AppHeader from '../components/AppHeader';
-import StampRow from '../components/StampRow';
+import LoyaltyCard from '../components/LoyaltyCard';
 import BottomNav from '../components/BottomNav';
 import styles from './Home.module.css';
 
@@ -31,6 +31,7 @@ export default function Home() {
   const greeting = hour < 12 ? 'Good morning,' : hour < 17 ? 'Good afternoon,' : 'Good evening,';
   const name = profile?.name || user?.name || 'Guest';
   const stamps = profile?.currentStamps ?? user?.currentStamps ?? 0;
+  const totalStamps = profile?.totalStamps ?? user?.totalStamps ?? 0;
 
   return (
     <div className={styles.page}>
@@ -43,19 +44,12 @@ export default function Home() {
         </div>
 
         {/* Loyalty Card */}
-        <div className={styles.loyaltyCard}>
-          <div className={styles.loyaltyTop}>
-            <div>
-              <h2 className={styles.loyaltyTitle}>Loyalty Rewards</h2>
-              <p className={styles.loyaltySub}>Buy 6 coffees, get 1 FREE</p>
-            </div>
-            <span className={styles.progress}>{stamps} / 6 Completed</span>
-          </div>
-          <StampRow current={stamps} total={6} />
-          <button className={styles.qrBtn} onClick={() => navigate('/qr')}>
-            📷 My QR Code
-          </button>
-        </div>
+        <LoyaltyCard
+          name={name}
+          currentStamps={stamps}
+          totalStamps={totalStamps}
+          onClick={() => navigate('/qr')}
+        />
 
         {/* Categories */}
         <div className={`${styles.section} ${styles.catSection}`}>

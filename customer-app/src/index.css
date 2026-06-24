@@ -121,6 +121,11 @@ a { text-decoration: none; color: inherit; }
   to   { transform: rotate(360deg); }
 }
 
+@keyframes cupPop {
+  0%   { opacity: 0; transform: translateY(8px) scale(0.7); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 /* Page enter animation */
 .page-enter {
   animation: fadeUp 0.45s var(--ease-out) both;

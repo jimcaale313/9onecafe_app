@@ -4,136 +4,34 @@
 .title {
   font-size: 22px;
   font-weight: 700;
-  margin-bottom: 22px;
+  margin-bottom: 4px;
   color: var(--dark);
   letter-spacing: -0.4px;
 }
-
-/* ── QR Card ── */
-.qrCard {
-  background: linear-gradient(160deg, #111A0D 0%, #080C06 100%);
-  border-radius: var(--radius-xl);
-  padding: 24px;
-  margin-bottom: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 20px 60px rgba(8,12,6,0.4);
-}
-
-.qrCard::before {
-  content: '';
-  position: absolute;
-  top: -40px; left: 50%; transform: translateX(-50%);
-  width: 200px; height: 200px;
-  background: radial-gradient(circle, rgba(201,168,76,0.15), transparent 70%);
-  pointer-events: none;
-  animation: glowPulse 3s ease-in-out infinite;
-}
-
-.qrInner {
-  background: var(--white);
-  border-radius: var(--radius-md);
-  padding: 16px;
-  width: 100%;
-  max-width: 220px;
-  aspect-ratio: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  box-shadow: 0 0 0 1px rgba(201,168,76,0.3), var(--shadow-gold);
-  animation: scaleIn 0.5s var(--ease-spring) 0.1s both;
-}
-
-/* Animated scan line */
-.qrInner::after {
-  content: '';
-  position: absolute;
-  left: 8px; right: 8px; height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(91,126,60,0.8), transparent);
-  border-radius: 1px;
-  animation: scanLine 2.5s ease-in-out infinite;
-}
-
-.qrImg { width: 100%; height: 100%; object-fit: contain; border-radius: 6px; }
-
-.qrPlaceholder {
-  color: var(--secondary);
+.subtitle {
   font-size: 13px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
+  color: var(--secondary);
+  margin-bottom: 20px;
 }
-
-.qrLoader {
-  width: 28px; height: 28px;
-  border: 2.5px solid rgba(91,126,60,0.2);
-  border-top-color: var(--green);
-  border-radius: 50%;
-  animation: rotateSlow 0.8s linear infinite;
-}
-
-.qrHint {
-  font-size: 12px;
-  color: #4B5563;
-  text-align: center;
-  max-width: 200px;
-  line-height: 1.5;
-}
-
-/* Corner accents */
-.corner {
-  position: absolute;
-  width: 16px; height: 16px;
-  border-color: rgba(201,168,76,0.5);
-  border-style: solid;
-}
-.corner.tl { top: 8px; left: 8px; border-width: 2px 0 0 2px; }
-.corner.tr { top: 8px; right: 8px; border-width: 2px 2px 0 0; }
-.corner.bl { bottom: 8px; left: 8px; border-width: 0 0 2px 2px; }
-.corner.br { bottom: 8px; right: 8px; border-width: 0 2px 2px 0; }
-
-/* ── Loyalty Section ── */
-.loyaltySection {
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-xl);
-  padding: 20px;
-  margin-bottom: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  background: linear-gradient(145deg, #FFFFFF, var(--gray-bg));
-  box-shadow: var(--shadow-sm);
-  animation: fadeUp 0.5s var(--ease-out) 0.2s both;
-}
-
-.loyaltyHeader { display: flex; justify-content: space-between; align-items: center; }
-.loyaltyLabel { font-size: 15px; font-weight: 700; color: var(--green); }
-.loyaltyStat { font-size: 13px; color: var(--secondary); }
 
 .redeemBtn {
   width: 100%;
-  background: var(--border);
+  background: var(--gray-bg);
   color: #9CA3AF;
-  border: none;
+  border: 1.5px solid var(--border);
   border-radius: var(--radius-md);
   padding: 16px;
   font-size: 14px;
   font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 18px;
   transition: all 0.3s var(--ease-out);
 }
 
 .redeemActive {
   background: linear-gradient(135deg, var(--green), var(--green-dark));
   color: #fff;
+  border-color: transparent;
   cursor: pointer;
   box-shadow: var(--shadow-green);
   animation: pulse-green 2.5s ease-in-out infinite;
@@ -148,7 +46,7 @@
   text-align: center;
   color: var(--secondary);
   font-size: 12px;
-  padding: 12px 0;
+  padding: 18px 0 4px;
   font-style: italic;
   opacity: 0.8;
   animation: fadeIn 0.6s ease 0.4s both;

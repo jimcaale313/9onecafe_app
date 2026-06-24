@@ -1,0 +1,77 @@
+.card {
+  position: relative;
+  border-radius: 26px;
+  padding: 22px 22px 24px;
+  background: linear-gradient(158deg, #51664733 0%, #4a5c40 14%, #3c4b34 100%);
+  background-color: #46583d;
+  box-shadow: 0 18px 44px rgba(34,46,28,0.32), inset 0 1px 0 rgba(255,255,255,0.08);
+  overflow: hidden;
+  color: #fff;
+  isolation: isolate;
+  animation: fadeUp 0.5s var(--ease-out) both;
+}
+
+.clickable { cursor: pointer; transition: transform 0.3s var(--ease-spring), box-shadow 0.3s ease; }
+.clickable:hover { transform: translateY(-4px); box-shadow: 0 26px 56px rgba(34,46,28,0.4); }
+.clickable:active { transform: translateY(-1px) scale(0.995); }
+
+.glowA, .glowB { position: absolute; border-radius: 50%; filter: blur(34px); z-index: -1; pointer-events: none; }
+.glowA { width: 200px; height: 200px; top: -70px; right: -50px; background: radial-gradient(circle, rgba(217,184,120,0.28), transparent 70%); }
+.glowB { width: 180px; height: 180px; bottom: -60px; left: -50px; background: radial-gradient(circle, rgba(125,156,99,0.3), transparent 70%); }
+
+/* top */
+.top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
+.logo { display: flex; flex-direction: column; line-height: 1; }
+.logoNum {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 26px; font-weight: 700; letter-spacing: 0.5px;
+  color: #f0e6cd;
+}
+.logoCafe { font-size: 9px; letter-spacing: 5px; color: rgba(255,255,255,0.55); margin-top: 3px; padding-left: 2px; }
+
+.stampCount { text-align: right; display: flex; flex-direction: column; align-items: flex-end; }
+.stampLabel { display: block; font-size: 9px; letter-spacing: 1.5px; color: rgba(255,255,255,0.55); font-weight: 600; }
+.stampValue { display: block; font-size: 24px; font-weight: 700; color: #fff; line-height: 1.05; margin-top: 2px; }
+
+/* cups */
+.cups {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 2px; padding: 6px 2px 14px;
+}
+.cup { flex: 1; display: flex; justify-content: center; }
+.cupLow { transform: translateY(9px); }
+
+/* meta */
+.meta { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 18px; padding-top: 4px; }
+.metaLabel { font-size: 9px; letter-spacing: 1.3px; color: rgba(255,255,255,0.5); font-weight: 600; margin-bottom: 4px; }
+.metaName { font-size: 21px; font-weight: 600; color: #fff; letter-spacing: -0.2px; line-height: 1.05; }
+.metaRight { text-align: right; }
+.metaRewards { font-size: 21px; font-weight: 700; color: #f0e6cd; line-height: 1.05; }
+
+/* QR */
+.qrWrap {
+  background: #fff;
+  border-radius: 16px;
+  padding: 12px;
+  width: 168px; height: 168px;
+  margin: 0 auto;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.25);
+  animation: scaleIn 0.4s var(--ease-spring) both;
+}
+.qrImg { width: 100%; height: 100%; object-fit: contain; display: block; }
+.qrLoader {
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 3px solid var(--green-light); border-top-color: var(--green);
+  animation: spin 0.9s linear infinite;
+}
+
+.qrHint {
+  text-align: center;
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 0.3px;
+  padding: 10px 0 2px;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
