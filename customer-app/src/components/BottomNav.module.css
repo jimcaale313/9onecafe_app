@@ -1,58 +1,110 @@
 .nav {
   position: fixed;
-  bottom: 0;
+  bottom: calc(14px + env(safe-area-inset-bottom, 0px));
   left: 50%;
   transform: translateX(-50%);
-  width: 100%;
-  max-width: 430px;
-  background: rgba(255,255,255,0.92);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-top: 1px solid rgba(232,237,228,0.8);
+  width: calc(100% - 28px);
+  max-width: 412px;
   display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 8px 8px 8px;
+  background: linear-gradient(180deg, #FCF8F1 0%, #F2EADC 100%);
+  border: 1px solid rgba(190,168,132,0.28);
+  border-radius: 24px;
+  box-shadow:
+    0 14px 36px rgba(54,40,18,0.18),
+    inset 0 1px 0 rgba(255,255,255,0.75);
   z-index: 1000;
-  padding-bottom: env(safe-area-inset-bottom, 0);
-  box-shadow: 0 -8px 32px rgba(15,26,10,0.07);
+  animation: fadeUp 0.45s var(--ease-out) both;
+}
+
+/* ── Chef-hat home badge ── */
+.homeBadge {
+  width: 46px; height: 46px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: #fff;
+  color: #7c6a4d;
+  box-shadow: 0 3px 9px rgba(54,40,18,0.14), inset 0 0 0 1px rgba(190,168,132,0.18);
+  transition: transform 0.3s var(--ease-spring), background 0.25s ease, color 0.25s ease;
+}
+.homeBadge:active { transform: scale(0.92); }
+.homeActive {
+  background: linear-gradient(135deg, var(--green), var(--green-dark));
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(91,126,60,0.4);
+}
+
+/* ── Items ── */
+.items {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 2px;
 }
 
 .tab {
-  flex: 1;
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 11px 4px 9px;
   gap: 3px;
-  color: #9CA3AF;
-  transition: color 0.2s ease;
-  position: relative;
+  padding: 4px 2px 2px;
+  color: #9b8c74;
+  transition: color 0.2s ease, transform 0.25s var(--ease-spring);
+}
+.tab:active { transform: scale(0.9); }
+
+.label {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
-.tab::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 50%;
-  transform: translateX(-50%) scaleX(0);
-  width: 28px; height: 2.5px;
+.dash {
+  width: 0; height: 2px;
+  border-radius: 2px;
   background: var(--green);
-  border-radius: 0 0 3px 3px;
-  transition: transform 0.3s var(--ease-spring);
+  transition: width 0.3s var(--ease-spring);
 }
 
 .active { color: var(--green); }
-.active::before { transform: translateX(-50%) scaleX(1); }
+.active .dash { width: 16px; }
 
-.icon {
-  font-size: 22px;
-  line-height: 1;
-  transition: transform 0.25s var(--ease-spring);
+/* ── Wooden handle end cap ── */
+.handle {
+  position: relative;
+  flex-shrink: 0;
+  width: 24px; height: 34px;
+  margin-right: 1px;
+  border-radius: 7px 13px 13px 7px;
+  background: linear-gradient(135deg, #9c6a3c 0%, #7a4f2c 55%, #623f22 100%);
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,0.25),
+    inset 0 -2px 3px rgba(0,0,0,0.25);
 }
-
-.active .icon { transform: scale(1.15) translateY(-1px); }
-
-.label {
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.2px;
-  transition: font-weight 0.15s;
+.handle::before {
+  /* metal ferrule */
+  content: '';
+  position: absolute;
+  left: -3px; top: 50%;
+  transform: translateY(-50%);
+  width: 5px; height: 26px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #e7ddc8, #c4b696);
 }
-.active .label { font-weight: 700; }
+.handle::after {
+  /* rivet */
+  content: '';
+  position: absolute;
+  right: 6px; top: 50%;
+  transform: translateY(-50%);
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: #d9b878;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.15);
+}
