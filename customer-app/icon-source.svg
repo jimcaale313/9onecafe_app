@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4a5d40"/>
+      <stop offset="0.55" stop-color="#3b4a33"/>
+      <stop offset="1" stop-color="#2c3826"/>
+    </linearGradient>
+    <linearGradient id="gold2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f6e7b4"/>
+      <stop offset="1" stop-color="#c9a84c"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.38" r="0.6">
+      <stop offset="0" stop-color="#d9b878" stop-opacity="0.30"/>
+      <stop offset="1" stop-color="#d9b878" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- background -->
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+  <rect width="1024" height="1024" fill="url(#glow)"/>
+
+  <!-- gold ring accent -->
+  <circle cx="512" cy="430" r="232" fill="none" stroke="#c9a84c" stroke-opacity="0.35" stroke-width="3"/>
+
+  <!-- coffee cup -->
+  <g transform="translate(512,400)">
+    <!-- steam -->
+    <path d="M-44 -150 q-26 26 0 52" fill="none" stroke="#f3e2ad" stroke-opacity="0.6" stroke-width="9" stroke-linecap="round"/>
+    <path d="M0 -158 q-26 26 0 52" fill="none" stroke="#f3e2ad" stroke-opacity="0.6" stroke-width="9" stroke-linecap="round"/>
+    <path d="M44 -150 q-26 26 0 52" fill="none" stroke="#f3e2ad" stroke-opacity="0.6" stroke-width="9" stroke-linecap="round"/>
+    <!-- saucer -->
+    <ellipse cx="0" cy="92" rx="150" ry="26" fill="#f3e2ad"/>
+    <!-- cup body -->
+    <path d="M-104 -54 H104 a18 18 0 0 1 18 18 v22 a122 122 0 0 1 -260 0 v-22 a18 18 0 0 1 18 -18 Z" fill="url(#gold2)"/>
+    <!-- handle -->
+    <path d="M118 -28 a52 52 0 0 1 0 90" fill="none" stroke="url(#gold2)" stroke-width="22" stroke-linecap="round"/>
+    <!-- coffee surface -->
+    <ellipse cx="0" cy="-50" rx="108" ry="20" fill="#5b4326"/>
+  </g>
+
+  <!-- wordmark -->
+  <text x="512" y="770" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="190" font-weight="700" fill="url(#gold2)" letter-spacing="2">9ONE</text>
+  <text x="512" y="848" text-anchor="middle" font-family="Georgia, serif" font-size="56" fill="#e7ddc8" letter-spacing="26">CAFÉ</text>
+</svg>
