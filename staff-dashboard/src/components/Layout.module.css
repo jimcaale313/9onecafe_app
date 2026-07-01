@@ -1,0 +1,64 @@
+.shell { display: flex; }
+
+.main {
+  margin-left: 240px;
+  flex: 1;
+  min-height: 100vh;
+  min-width: 0;
+}
+
+/* mobile top bar — hidden on desktop */
+.mobileBar { display: none; }
+
+@media (max-width: 768px) {
+  .main {
+    margin-left: 0;
+    padding-top: 56px;
+  }
+
+  .mobileBar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 56px;
+    padding: 0 14px;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    z-index: 90;
+  }
+
+  .hamburger {
+    width: 40px; height: 40px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 4px;
+    background: none; border: none;
+    cursor: pointer;
+    border-radius: 10px;
+  }
+  .hamburger:active { background: var(--gray-bg); }
+  .hamburger span {
+    width: 20px; height: 2px;
+    background: var(--dark);
+    border-radius: 2px;
+  }
+
+  .mobileLogo {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--green);
+    letter-spacing: -0.5px;
+  }
+  .mobileLogo em {
+    font-style: normal;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--secondary);
+    margin-left: 3px;
+  }
+}

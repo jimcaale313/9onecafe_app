@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Sidebar from './components/Sidebar';
 import Login from './pages/Login';
@@ -10,12 +11,31 @@ import CustomerDetail from './pages/CustomerDetail';
 import MenuManager from './pages/MenuManager';
 import StaffAccounts from './pages/StaffAccounts';
 import FeedbackManager from './pages/FeedbackManager';
+import layoutStyles from './components/Layout.module.css';
 
 function Layout() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
+
+  // close the drawer whenever the route changes
+  useEffect(() => { setMenuOpen(false); }, [location.pathname]);
+
   return (
-    <div style={{ display: 'flex' }}>
-      <Sidebar />
-      <main style={{ marginLeft: 240, flex: 1, minHeight: '100vh' }}>
+    <div className={layoutStyles.shell}>
+      <header className={layoutStyles.mobileBar}>
+        <button
+          className={layoutStyles.hamburger}
+          onClick={() => setMenuOpen(true)}
+          aria-label="Open menu"
+        >
+          <span /><span /><span />
+        </button>
+        <span className={layoutStyles.mobileLogo}>9ONE<em>CAFÉ</em></span>
+      </header>
+
+      <Sidebar open={menuOpen} onClose={() => setMenuOpen(false)} />
+
+      <main className={layoutStyles.main}>
         <Outlet />
       </main>
     </div>
